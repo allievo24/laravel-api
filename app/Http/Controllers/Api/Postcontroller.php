@@ -15,8 +15,17 @@ class Postcontroller extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
+
     {
-        $posts = Post::all();
+        
+        
+
+
+
+        //modo senza la paginate
+       // $posts = Post::with(['category','tags'])->get();
+       $posts = Post::with(['category','tags'])->paginate(3);
+
 
         return response()->json([
                                     'success'=>true,

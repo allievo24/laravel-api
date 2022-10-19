@@ -1942,11 +1942,27 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MyMain',
+  data: function data() {
+    return {
+      posts: [],
+      loding: true
+    };
+  },
   methods: {
     getPosts: function getPosts() {
+      var _this = this;
+
       axios.get('/api/posts').then(function (response) {
-        console.log(response);
+        _this.posts = response.data.results;
+        _this.loding = false;
       });
+    },
+    troncaText: function troncaText(text, lungezza) {
+      if (text.length < lungezza) {
+        return text;
+      } else {
+        return text.substring(0, lungezza) + '...';
+      }
     }
   },
   mounted: function mounted() {
@@ -2064,10 +2080,48 @@ var render = function render() {
 
   return _c("div", {
     staticClass: "container"
-  });
+  }, [_vm.loading ? _c("div", {
+    staticClass: "d-flex justify-content-center"
+  }, [_vm._m(0)]) : _vm._l(_vm.posts, function (post, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "card mb-5 mt-5"
+    }, [_c("div", {
+      staticClass: "card-body"
+    }, [_c("h2", {
+      attrs: {
+        clss: "card-title"
+      }
+    }, [_vm._v(_vm._s(post.title))]), _vm._v(" "), _c("h5", {
+      attrs: {
+        clss: "card-title"
+      }
+    }, [_vm._v(_vm._s(post.slug))]), _vm._v(" "), _c("p", {
+      staticClass: "card-text"
+    }, [_vm._v(_vm._s(_vm.troncaText(post.content, 150)))]), _vm._v(" "), _c("p", {
+      staticClass: "card-text"
+    }, [_vm._v(_vm._s(post.category ? post.category.name : "-"))]), _vm._v(" "), _c("a", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        href: ""
+      }
+    }, [_vm._v("Read more...")])])]);
+  })], 2);
 };
 
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", {
+    staticClass: "spinner-border",
+    attrs: {
+      role: "status"
+    }
+  }, [_c("span", {
+    staticClass: "visually-hidden"
+  }, [_vm._v("Loading...")])]);
+}];
 render._withStripped = true;
 
 
