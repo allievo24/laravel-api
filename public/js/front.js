@@ -1945,23 +1945,32 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       posts: [],
-      loding: true
+      loding: true,
+      paginaCorrente: 1,
+      ultimaPagina: null
     };
   },
   methods: {
-    getPosts: function getPosts() {
+    getPosts: function getPosts(page) {
       var _this = this;
 
-      axios.get('/api/posts').then(function (response) {
-        _this.posts = response.data.results;
+      this.loding = true;
+      axios.get('/api/posts', {
+        params: {
+          page: page
+        }
+      }).then(function (response) {
+        _this.posts = response.data.results.data;
         _this.loding = false;
+        _this.paginaCorrente = response.data.results.current_page;
+        _this.ultimaPagina = response.data.results.last_page;
       });
     },
-    troncaText: function troncaText(text, lungezza) {
-      if (text.length < lungezza) {
+    troncaText: function troncaText(text, lunghezza) {
+      if (text.length < lunghezza) {
         return text;
       } else {
-        return text.substring(0, lungezza) + '...';
+        return text.substring(0, lunghezza) + '...';
       }
     }
   },
@@ -2080,7 +2089,7 @@ var render = function render() {
 
   return _c("div", {
     staticClass: "container"
-  }, [_vm.loading ? _c("div", {
+  }, [_vm.loding ? _c("div", {
     staticClass: "d-flex justify-content-center"
   }, [_vm._m(0)]) : _vm._l(_vm.posts, function (post, index) {
     return _c("div", {
@@ -2106,7 +2115,36 @@ var render = function render() {
         href: ""
       }
     }, [_vm._v("Read more...")])])]);
-  })], 2);
+  }), _vm._v(" "), _c("nav", [_c("ul", {
+    staticClass: "pagination"
+  }, [_c("li", {
+    staticClass: "page-item"
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.getPosts(_vm.paginaCorrente - 1);
+      }
+    }
+  }, [_vm._v("Previous")])]), _vm._v(" "), _c("li", {
+    staticClass: "page-item",
+    "class": _vm.paginaCorrente == _vm.ultimaPagina ? "disabled" : ""
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.getPosts(_vm.paginaCorrente + 1);
+      }
+    }
+  }, [_vm._v("Next")])])])])], 2);
 };
 
 var staticRenderFns = [function () {

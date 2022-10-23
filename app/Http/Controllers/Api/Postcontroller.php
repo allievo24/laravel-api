@@ -24,7 +24,7 @@ class Postcontroller extends Controller
 
         //modo senza la paginate
        // $posts = Post::with(['category','tags'])->get();
-       $posts = Post::with(['category','tags'])->paginate(3);
+       $posts = Post::with(['category','tags'])->paginate(2);
 
 
         return response()->json([

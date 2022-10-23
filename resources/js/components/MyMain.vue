@@ -23,8 +23,8 @@
   </div>
    <nav >
     <ul class="pagination">
-    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    <li class="page-item"><a class="page-link" href="#" @click.prevent="getPosts(paginaCorrente - 1)">Previous</a></li>
+    <li class="page-item" :class="(paginaCorrente==ultimaPagina)?'disabled':''"><a class="page-link" href="#" @click.prevent="getPosts(paginaCorrente + 1)">Next</a></li>
     </ul>
    </nav>
 </div>
@@ -42,26 +42,31 @@
                     posts:[], 
                     loding: true,
                     paginaCorrente: 1,
-                    ultmaPagina:null,
+                    ultimaPagina: null,
                 }
 
             },
             methods:{
-                getPosts(){
-                    this.loding = true
-                    axios.get('/api/posts')
+                getPosts(page){
+                    this.loding = true;
+                    axios.get('/api/posts',{
+                        params:{
+                            page:page
+                        }
+                    })
                     .then((response)=>{
                        this.posts= response.data.results.data;
                        this.loding = false
                        this.paginaCorrente = response.data.results.current_page;
-                       this.ultmaPagina = response.data.results.last_page;
+                       this.ultimaPagina = response.data.results.last_page;
                     });
+
                 },
-                troncaText(text,lungezza ){
-                    if(text.length < lungezza){
+                troncaText(text,lunghezza ){
+                    if(text.length < lunghezza){
                         return text;
                     }else{
-                    return text.substring(0,lungezza) + '...';
+                    return text.substring(0,lunghezza) + '...';
 
                     }
                     
